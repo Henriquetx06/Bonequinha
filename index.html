@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Para minha pequena 💌</title>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Georgia', serif; background-color: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; transition: background-color 1s ease-in-out; }
+    
+    .app-container { width: 100%; max-width: 430px; height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+    #screen1 { text-align: center; padding: 20px; transition: opacity 0.8s ease, transform 0.8s ease; z-index: 10; }
+    #screen1 h1 { font-size: 2.2rem; margin-bottom: 40px; line-height: 1.3; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    
+    #main-btn { 
+      background-color: #fff; color: #9c1b4b; border: none; border-radius: 50px; 
+      font-family: 'Georgia', serif; font-weight: bold; font-size: 1.5rem; 
+      padding: 20px 60px;
+      cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+      transition: transform 0.1s ease; touch-action: manipulation;
+    }
+    #main-btn:active { transform: scale(0.9); }
+    
+    .btn-pop { animation: pop 0.3s ease; }
+    @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(0.85); } 100% { transform: scale(1); } }
+
+    #screen2 { display: none; position: absolute; width: 90%; max-width: 400px; height: 420px; background-color: #fff5e6; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); flex-direction: column; padding: 30px 20px; opacity: 0; transform: translateY(30px); transition: opacity 1s ease, transform 1s ease; overflow: hidden; z-index: 20; }
+
+    .card-content { display: flex; width: 100%; height: 100%; position: relative; z-index: 2; align-items: center; }
+    .text-area { width: 55%; color: #9c1b4b; font-size: 1.1rem; line-height: 1.5; padding-top: 10px; }
+    .image-area { width: 45%; display: flex; justify-content: center; align-items: center; }
+    .image-area img { max-width: 100%; max-height: 200px; object-fit: contain; mix-blend-mode: multiply; }
+
+    .cursor { font-weight: bold; animation: blink 0.8s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    #hearts-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+    .heart { position: absolute; bottom: -20px; opacity: 0; }
+    @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 0.8; } 100% { transform: translateY(-400px) rotate(20deg) scale(1.2); opacity: 0; } }
+  </style>
+</head>
+<body>
+
+  <main class="app-container">
+    
+    <section id="screen1" aria-label="Tela inicial">
+      <h1>Feito de um nerd<br>Para minha pequena</h1>
+      <button id="main-btn" aria-label="Botão de ação">Te</button>
+    </section>
+
+    <section id="screen2" aria-label="Mensagem romântica">
+      <div id="hearts-container" aria-hidden="true"></div>
+      
+      <div class="card-content">
+        <div class="text-area" role="region" aria-live="polite">
+          <span id="typewriter"></span><span class="cursor" aria-hidden="true">|</span>
+        </div>
+        
+        <div class="image-area">
+          <img src="arvore.png" alt="Foto especial">
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const btn = document.getElementById('main-btn');
+    const screen1 = document.getElementById('screen1');
+    const screen2 = document.getElementById('screen2');
+    const typewriter = document.getElementById('typewriter');
+    const heartsContainer = document.getElementById('hearts-container');
+
+    const bgColors = ['#1a1a1a', '#ff4d85', '#d10a53'];
+    const labels = ['Te', 'Quero', 'Muito'];
+    let clicks = 0;
+
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    btn.addEventListener('click', () => {
+      btn.classList.remove('btn-pop');
+      void btn.offsetWidth; 
+      btn.classList.add('btn-pop');
+      clicks++;
+
+      if (clicks < 3) {
+        document.body.style.backgroundColor = bgColors[clicks];
+        setTimeout(() => { btn.innerText = labels[clicks]; }, 100);
+      } else {
+        document.body.style.backgroundColor = '#e81c64';
+        screen1.style.opacity = '0';
+        screen1.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          screen1.style.display = 'none';
+          screen2.style.display = 'flex';
+          setTimeout(() => {
+            screen2.style.opacity = '1';
+            screen2.style.transform = 'translateY(0)';
+            startSurprise();
+          }, 50);
+        }, 800);
+      }
+    });
+
+    async function startSurprise() {
+      const heartChars = ['❤️', '💖', '💗'];
+      for(let i = 0; i < 20; i++) {
+        const span = document.createElement('span');
+        span.className = 'heart';
+        span.innerText = heartChars[Math.floor(Math.random() * heartChars.length)];
+        span.style.left = `${Math.random() * 90}%`;
+        span.style.fontSize = `${14 + Math.random() * 10}px`;
+        span.style.animation = `floatUp ${3 + Math.random() * 3}s linear infinite`;
+        span.style.animationDelay = `${Math.random() * 2}s`;
+        heartsContainer.appendChild(span);
+      }
+
+      const p1 = "Feliz Dia dos Namorados";
+      const wordToDelete = "Namorados"; 
+      const p2 = "Futuros namorados, minha bonequinha!!! 💗";
+      
+      await sleep(1000);
+      for (let i = 0; i < p1.length; i++) {
+        typewriter.innerText += p1[i];
+        await sleep(50 + Math.random() * 50);
+      }
+      await sleep(1000);
+      for (let i = 0; i < wordToDelete.length; i++) {
+        typewriter.innerText = typewriter.innerText.slice(0, -1);
+        await sleep(40);
+      }
+      await sleep(500);
+      for (let i = 0; i < p2.length; i++) {
+        typewriter.innerText += p2[i];
+        let delay = 40 + Math.random() * 50;
+        if (p2[i] === ',' || p2[i] === '!') delay += 150;
+        await sleep(delay);
+      }
+    }
+  </script>
+</body>
+</html>
