@@ -41,6 +41,25 @@
     #hearts-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
     .heart { position: absolute; bottom: -20px; opacity: 0; }
     @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 0.8; } 100% { transform: translateY(-400px) rotate(20deg) scale(1.2); opacity: 0; } }
+
+    /* Ajuste para telas pequenas (iPhone) */
+    @media (max-width: 480px) {
+      .card-content {
+        flex-direction: column; /* Empilha as coisas */
+        height: auto;
+        padding-top: 20px;
+      }
+      .text-area {
+        width: 100%; /* O texto ocupa a tela toda */
+        padding-bottom: 20px;
+      }
+      .image-area {
+        width: 100%; /* A imagem ocupa a tela toda */
+      }
+      .image-area img {
+        max-height: 150px; /* Diminui um pouco a imagem pra caber melhor */
+      }
+    }
   </style>
 </head>
 <body>
